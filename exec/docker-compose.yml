@@ -1,0 +1,34 @@
+services:
+  web:
+    build: ./web
+    ports:
+      - "10080:80"
+    links:
+      - ap1
+      - ap2
+  ap1:
+    build:
+      context: ..
+      dockerfile: exec/ap/Dockerfile
+    ports:
+      - "18080:8080"
+    links:
+      - db
+  ap2:
+    build:
+      context: ..
+      dockerfile: exec/ap/Dockerfile
+    ports:
+      - "28080:8080"
+    links:
+      - db
+  db:
+    build: ./db
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo
+    labels:
+      org.springframework.boot.service-connection: postgres
